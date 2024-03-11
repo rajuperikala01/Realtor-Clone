@@ -7,7 +7,6 @@ function Header() {
 
   function path(route) {
     if(route === location.pathname){
-      console.log(location.pathname);
         return true;
     }
     else {

@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import OAuth from "./components/OAuth";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 function SignIn() {
   const [formData, setformData] = useState({
     email: "",
@@ -9,7 +13,7 @@ function SignIn() {
   });
   const [showPassword, setShowpassword] = useState(false);
   const { email, password } = formData;
-
+  const navigate = useNavigate();
   function onChangeEmail(e) {
     setformData((prevState) => ({
       ...prevState,
@@ -24,10 +28,23 @@ function SignIn() {
     }));
   }
 
-  function onSubmit(e) {
+  async function onSubmit(e) {
     e.preventDefault();
-
+    try {
+      const auth = getAuth();
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      if (userCredential.user) {
+        navigate("/");
+      }
+    } catch (error) {
+      toast.error("Bad user credentials");
+    }
   }
+
   return (
     <section>
       <h1 className="text-3xl text-center mt-6 font-bold ">SignIn</h1>
@@ -42,6 +59,7 @@ function SignIn() {
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
           <form onSubmit={(e) => onSubmit(e)}>
             <input
+              required
               type="email"
               onChange={onChangeEmail}
               value={email}
@@ -57,6 +75,7 @@ function SignIn() {
             />
             <div className="relative mb-6">
               <input
+                required
                 type={`${showPassword ? "text" : "password"}`}
                 onChange={onChangePass}
                 placeholder="Password"
@@ -106,8 +125,12 @@ function SignIn() {
               SignIn
             </button>
             <div className=" flex my-4 before:border-t before:flex-1 items-center before:border-gray-300 after:border-t  after:flex-1 after:border-gray-300">
-              <p className="text-center 
-              font-semibold mx-4">OR</p>
+              <p
+                className="text-center 
+              font-semibold mx-4"
+              >
+                OR
+              </p>
             </div>
             <OAuth />
           </form>

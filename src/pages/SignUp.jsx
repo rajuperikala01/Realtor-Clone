@@ -57,6 +57,7 @@ function SignUp() {
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
           <form onSubmit={onSubmit}>
           <input
+          required
               type="name"
               onChange={onChange}
               value={name}
@@ -72,6 +73,7 @@ function SignUp() {
                 "
             />
             <input
+            required
               type="email"
               onChange={onChange}
               value={email}
@@ -88,6 +90,7 @@ function SignUp() {
             />
             <div className="relative mb-6">
               <input
+              required
                 type={`${showPassword ? "text" : "password"}`}
                 onChange={onChange}
                 placeholder="Password"
